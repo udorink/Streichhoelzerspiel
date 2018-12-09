@@ -1,0 +1,61 @@
+<?xml version = "1.0"?>
+<project name="game" basedir="." default="all">
+    <property name="src.dir" value="src" />
+    <property name="build.dir" value="bin" />
+    <property name="jar.file" value="/jar/Streichhoelzerspiel.jar" />
+    <property name="main.class" value="streichhoelzerspiel.Streichhoelzerspiel" />
+    <property name="doc.dir" value="doc" />
+    <property name="lib.dir" value="lib" />
+    <target name="info" description="Informationen anzeigen">
+        <echo>Apache Ant version: ${ant.version} </echo>
+        <echo>build file: ${ant.file} </echo>
+    </target>
+    <target name="init" description="Projektverzeichnisse setzen">
+        <mkdir dir="${build.dir}" />
+        <mkdir dir="${doc.dir}" />
+        <echo>Verzeichnisse ${build.dir} und ${doc.dir} wurden erstellt.</echo>
+    </target>
+    <target name="clean" description="Ausgabeverzeichnisse leeren">
+        <delete>
+            <fileset dir="${build.dir}">
+                <include name="**/*.class" />
+            </fileset>
+        </delete>
+        <delete includeEmptyDirs="true">
+            <fileset dir="${doc.dir}">
+            </fileset>
+        </delete>
+        <echo>Verzeichnisse ${build.dir} und ${doc.dir} wurden geleert.</echo>
+    </target>
+    <target name="build" depends="init" description="Compilieren des Quellcodes">
+        <delete dir="${build.dir}" />
+        <mkdir dir="${build.dir}" />
+        <javac destdir="${build.dir}" includeantruntime="true">
+            <src path="${src.dir}" />
+        </javac>
+        <echo>Programm wurde compiliert</echo>
+    </target>
+    <target name="jar" depends="build" description="JAR Archiv erstellen">
+        <jar destfile="${build.dir}${jar.file}" >
+            <manifest>
+                <attribute name="Main-Class" value="${main.class}"/>
+            </manifest>
+        </jar>
+            <echo >JAR-Datei erstellt</echo>
+    </target>
+    <target name="run" depends="init" description="Ausführen des Bytecodes">
+        <java jar="${build.dir}${jar.file}" fork ="true"/>
+        <echo>Programm ausgeführt.</echo>
+    </target>
+    <target name="doc" depends="init" description="HTML Dokumentation generieren">
+        <delete dir="${doc.dir}" />
+        <mkdir dir="${doc.dir}" />
+        <javadoc destdir="${doc.dir}" private="true">
+            <fileset dir="${src.dir}" />
+        </javadoc>
+        <echo>HTML Dokumentation wurde generiert.</echo>
+    </target>
+    <target name="all" depends="info, init, clean, doc, build, jar, run" description="Ausfuerung aller targets in Reihenfolge">
+        <echo>Ausfuerung aller targets in Reihenfolge</echo>
+    </target>
+</project>
